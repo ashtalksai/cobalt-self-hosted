@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  cobalt-api:
+    image: ghcr.io/imputnet/cobalt:latest
+    container_name: cobalt-api
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      # Required
+      - API_URL=${API_URL:-https://cobalt.ashketing.com/}
+      - API_NAME=Cobalt
+      
+      # CORS - allow requests from our apps
+      - CORS_WILDCARD=true
+      - CORS_URL=${CORS_URL:-https://repurpose.ashketing.com,https://stravix.com}
+      
+      # YouTube proxy (WARP for bypassing blocks)
+      - YOUTUBE_PROXY=socks5://warp:1080
+      
+      # Rate limiting
+      - RATE_LIMIT=100
+      - RATE_LIMIT_WINDOW=60
+      
+      # Processing limits
+      - DURATION_LIMIT=10800
+      - STREAM_LIMIT=10000000000
+    volumes:
+      # Optional: YouTube cookies for additional auth
+      - ./cookies.json:/app/cookies.json:ro
+    depends_on:
+      warp:
+        condition: service_healthy
+    networks:
+      - cobalt-network
+
+  warp:
+    image: kingcc/warproxy:latest
+    container_name: cobalt-warp
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    healthcheck:
+      test: ["CMD", "curl", "-x", "socks5://127.0.0.1:1080", "-s", "https://cloudflare.com"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - cobalt-network
+
+networks:
+  cobalt-network:
+    driver: bridge

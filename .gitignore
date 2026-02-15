@@ -1,0 +1,8 @@
+# Environment
+.env
+
+# Cookies (contains sensitive auth tokens)
+cookies.json
+
+# Docker
+*.log

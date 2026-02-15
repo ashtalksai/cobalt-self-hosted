@@ -1,0 +1,44 @@
+{
+  "youtube": [
+    {
+      "name": "LOGIN_INFO",
+      "value": "YOUR_VALUE_HERE"
+    },
+    {
+      "name": "SID",
+      "value": "YOUR_VALUE_HERE"
+    },
+    {
+      "name": "HSID", 
+      "value": "YOUR_VALUE_HERE"
+    },
+    {
+      "name": "SSID",
+      "value": "YOUR_VALUE_HERE"
+    },
+    {
+      "name": "APISID",
+      "value": "YOUR_VALUE_HERE"
+    },
+    {
+      "name": "SAPISID",
+      "value": "YOUR_VALUE_HERE"
+    }
+  ],
+  "instagram": [
+    {
+      "name": "sessionid",
+      "value": "YOUR_VALUE_HERE"
+    }
+  ],
+  "twitter": [
+    {
+      "name": "auth_token",
+      "value": "YOUR_VALUE_HERE"
+    },
+    {
+      "name": "ct0",
+      "value": "YOUR_VALUE_HERE"
+    }
+  ]
+}
