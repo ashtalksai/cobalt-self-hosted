@@ -36,7 +36,7 @@ services:
       - cobalt-network
 
   warp:
-    image: kingcc/warproxy:latest
+    image: ghcr.io/kingcc/warproxy:latest
     container_name: cobalt-warp
     restart: unless-stopped
     cap_add:
