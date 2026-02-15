@@ -30,8 +30,7 @@ services:
       # Optional: YouTube cookies for additional auth
       - ./cookies.json:/app/cookies.json:ro
     depends_on:
-      warp:
-        condition: service_healthy
+      - warp
     networks:
       - cobalt-network
 
@@ -40,12 +39,7 @@ services:
     container_name: cobalt-warp
     restart: unless-stopped
     # No NET_ADMIN needed for this image
-    healthcheck:
-      test: ["CMD", "curl", "-x", "socks5://127.0.0.1:9091", "-s", "https://cloudflare.com"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+    # Healthcheck disabled - container auto-restarts on failure
     networks:
       - cobalt-network
 
