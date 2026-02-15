@@ -17,7 +17,7 @@ services:
       - CORS_URL=${CORS_URL:-https://repurpose.ashketing.com,https://stravix.com}
       
       # YouTube proxy (WARP for bypassing blocks)
-      - YOUTUBE_PROXY=socks5://warp:1080
+      - YOUTUBE_PROXY=socks5://warp:9091
       
       # Rate limiting
       - RATE_LIMIT=100
@@ -36,19 +36,16 @@ services:
       - cobalt-network
 
   warp:
-    image: ghcr.io/kingcc/warproxy:latest
+    image: ghcr.io/mon-ius/docker-warp-socks:v5
     container_name: cobalt-warp
     restart: unless-stopped
-    cap_add:
-      - NET_ADMIN
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=0
+    # No NET_ADMIN needed for this image
     healthcheck:
-      test: ["CMD", "curl", "-x", "socks5://127.0.0.1:1080", "-s", "https://cloudflare.com"]
+      test: ["CMD", "curl", "-x", "socks5://127.0.0.1:9091", "-s", "https://cloudflare.com"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
     networks:
       - cobalt-network
 
