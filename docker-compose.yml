@@ -12,6 +12,9 @@ services:
       - API_URL=${API_URL:-https://cobalt.ashketing.com/}
       - API_NAME=Cobalt
       
+      # YouTube Session Generator for auth
+      - YOUTUBE_SESSION_SERVER=http://yt-session:8080
+      
       # CORS - allow requests from our apps
       - CORS_WILDCARD=true
       - CORS_URL=${CORS_URL:-https://repurpose.ashketing.com,https://stravix.com}
@@ -26,6 +29,17 @@ services:
     volumes:
       # Optional: YouTube cookies for additional auth
       - ./cookies.json:/app/cookies.json:ro
+    depends_on:
+      - yt-session
+    networks:
+      - cobalt-network
+
+  yt-session:
+    image: ghcr.io/imputnet/yt-session-generator:webserver
+    container_name: yt-session
+    restart: unless-stopped
+    networks:
+      - cobalt-network
 
 networks:
   cobalt-network:
