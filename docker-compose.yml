@@ -15,10 +15,6 @@ services:
       # YouTube Session Generator for auth
       - YOUTUBE_SESSION_SERVER=http://yt-session:8080
       
-      # WARP Proxy for bypassing IP blocks (Twitter, Instagram, TikTok, Reddit)
-      - HTTP_PROXY=http://warp:8080
-      - HTTPS_PROXY=http://warp:8080
-      
       # CORS - allow requests from our apps
       - CORS_WILDCARD=true
       - CORS_URL=${CORS_URL:-https://repurpose.ashketing.com,https://stravix.com}
@@ -31,7 +27,6 @@ services:
       - DURATION_LIMIT=10800
     depends_on:
       - yt-session
-      - warp
     networks:
       - cobalt-network
 
@@ -39,24 +34,6 @@ services:
     image: ghcr.io/imputnet/yt-session-generator:webserver
     container_name: yt-session
     restart: unless-stopped
-    networks:
-      - cobalt-network
-
-  warp:
-    image: shahradel/cfw-proxy:latest
-    container_name: warp-proxy
-    restart: unless-stopped
-    privileged: true
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    sysctls:
-      - net.ipv4.ip_forward=1
-      - net.ipv4.conf.all.src_valid_mark=1
-      - net.ipv6.conf.all.disable_ipv6=0
-    environment:
-      - TZ=Europe/Amsterdam
-      - HTTP_PORT=8080
     networks:
       - cobalt-network
 
