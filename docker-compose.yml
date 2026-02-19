@@ -15,6 +15,13 @@ services:
       # YouTube Session Generator for auth
       - YOUTUBE_SESSION_SERVER=http://yt-session:8080
       
+      # Tor HTTP proxy for bypassing IP blocks (Twitter, Instagram, TikTok, Reddit)
+      # Uses Privoxy (HTTP) over Tor network
+      - HTTP_PROXY=http://torproxy:8118
+      - HTTPS_PROXY=http://torproxy:8118
+      # Don't proxy YouTube (works without proxy and Tor is slow)
+      - NO_PROXY=youtube.com,googlevideo.com,ytimg.com
+      
       # CORS - allow requests from our apps
       - CORS_WILDCARD=true
       - CORS_URL=${CORS_URL:-https://repurpose.ashketing.com,https://stravix.com}
@@ -27,6 +34,7 @@ services:
       - DURATION_LIMIT=10800
     depends_on:
       - yt-session
+      - torproxy
     networks:
       - cobalt-network
 
@@ -34,6 +42,15 @@ services:
     image: ghcr.io/imputnet/yt-session-generator:webserver
     container_name: yt-session
     restart: unless-stopped
+    networks:
+      - cobalt-network
+
+  torproxy:
+    image: dperson/torproxy:latest
+    container_name: torproxy
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Amsterdam
     networks:
       - cobalt-network
 
